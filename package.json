@@ -15,6 +15,7 @@
     "lint": "eslint . --ext .ts --fix"
   },
   "dependencies": {
+    "body-parser": "^1.20.0",
     "express": "^4.17.3",
     "firebase": "^9.6.11",
     "modular-power": "^2.0.0"
