@@ -3,6 +3,10 @@ import config = require("../configs/config.json")
 import firebase = require("firebase/firestore")
 import firebaseapp = require("firebase/app")
 import bodyParser = require('body-parser')
+import cors = require('cors')
+declare var takeSnapshot: any;
+var takeSnapshot =  require("../../snapshot/snap");
+
 
 const app = firebaseapp.initializeApp(config.firebaseConfig)
 const db = firebase.getFirestore(app)
@@ -15,6 +19,7 @@ server.use(bodyParser.json());
 // server.use(bodyParser.urlencoded());
 // // in latest body-parser use like below.
 server.use(bodyParser.urlencoded({ extended: true }));
+server.use(cors());
 // server.use(express.json())
 
 //#region view
@@ -75,10 +80,11 @@ server.get("/dao/:id/proposals/:proposalId", async (req, res) => {
 server.post("/addproposal", parser, async (req, res) => {
     const proposal = {
         author: "",
+        publicKey: "",
         daoId: "",
         description: "",
         status: {
-            date: new Date(),
+            date: new Date(req.body.date),
             result: false
         },
         title: "",
@@ -86,6 +92,15 @@ server.post("/addproposal", parser, async (req, res) => {
     }
     //console.log(req.body)
     await firebase.addDoc(firebase.collection(db, "proposals"), proposal)
+    return res.status(200).send()
+})
+
+server.get("/takeSnapshot/:proposalId", async (req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const balances = await takeSnapshot.takeSnapshot("0x86db8fc255d46aa692dbc2050c4a26c1ce61711e")
+    //console.log(balances)
+    //console.log(req.body)
+    await firebase.addDoc(firebase.collection(db, "snapshot"), {balances, proposalId: req.params.proposalId})
     return res.status(200).send()
 })
 
