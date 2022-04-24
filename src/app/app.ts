@@ -92,7 +92,7 @@ server.post("/addproposal", parser, async (req, res) => {
     }
     //console.log(req.body)
     const uploadedDoc = await firebase.addDoc(firebase.collection(db, "proposals"), proposal)
-    return res.status(200).send(uploadedDoc.id)
+    return res.json(uploadedDoc.id)
 })
 
 server.get("/takeSnapshot/:proposalId", async (req, res) => {
