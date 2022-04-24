@@ -17,9 +17,11 @@
   "dependencies": {
     "@types/cors": "^2.8.12",
     "body-parser": "^1.20.0",
+    "convert-array-to-csv": "^2.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "firebase": "^9.6.11",
+    "ipfs": "^0.62.2",
     "jsbn": "^1.1.0",
     "modular-power": "^2.0.0",
     "node-fetch": "2"

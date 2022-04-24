@@ -97,11 +97,11 @@ server.post("/addproposal", parser, async (req, res) => {
 
 server.get("/takeSnapshot/:proposalId", async (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const balances = await takeSnapshot.takeSnapshot("0x86db8fc255d46aa692dbc2050c4a26c1ce61711e")
+    const response: any = await takeSnapshot.takeSnapshot("0x86db8fc255d46aa692dbc2050c4a26c1ce61711e")
     //console.log(balances)
     //console.log(req.body)
-    await firebase.addDoc(firebase.collection(db, "snapshot"), {balances, proposalId: req.params.proposalId})
-    return res.status(200).send()
+    await firebase.addDoc(firebase.collection(db, "snapshot"), {balances: response.balances, proposalId: req.params.proposalId})
+    return res.status(200).send(response.cid)
 })
 
 //#endregion
