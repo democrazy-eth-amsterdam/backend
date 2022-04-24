@@ -1,6 +1,7 @@
 const fetch = require("node-fetch")
 const IPFS = require("ipfs")
 const converter = require('convert-array-to-csv');
+import { Web3Storage, File } from 'web3.storage'
 
 const get_rpc_response = async (method, params = null) => {
     const url = "https://kovan.optimism.io/"
@@ -59,9 +60,13 @@ const get_balances = async transfers => {
 const takeSnapshot = async (address, toBlock = null) => {
     const transfers = await get_contract_transfers(address, toBlock)
     const balances = await get_balances(transfers)
-    const ipfs = await IPFS.create()
+    // const ipfs = await IPFS.create()
     const csvFromArray = converter.convertArrayToCSV(balances)
-    const { cid } = await ipfs.add(csvFromArray)
+    const buffer = Buffer.from(csvFromArray)
+    const file = new File([buffer], 'snapshot.json')
+    const client = new Web3Storage({ token: process.env.WEB3STORAGE_TOKEN })
+    const cid = await client.put(file)
+    // const { cid } = await ipfs.add(csvFromArray)
     console.log(cid)
     return {balances, cid}
 }
